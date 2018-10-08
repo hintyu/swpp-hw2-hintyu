@@ -1,0 +1,26 @@
+<ngb-tabset>
+    <ngb-tab title="Write" id="write-tab-button">
+        <ng-template ngbTabContent>
+            <div>
+                <input id="article-title-input"
+                       name="title" type="text"/>
+            </div>
+            <div>
+                <textarea id="article-content-input"
+                          name="content" cols="40" rows="8"></textarea>
+            </div>
+        </ng-template>
+    </ngb-tab>
+    <ngb-tab title="Preview" id="preview-tab-button">
+        <ng-template ngbTabContent>
+            <div>
+                <h1 id="article-title">{{article.title}}</h1>
+                <p id="article-author">{{currentUser.name}}</p>
+                <p id="article-content">{{article.author_id}}</p>
+            </div>
+        </ng-template>
+    </ngb-tab>
+</ngb-tabset>
+
+<button id="back-create-article-button">Back</button>
+<button id="confirm-create-article-button">Confirm</button>

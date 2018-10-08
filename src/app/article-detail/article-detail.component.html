@@ -1,0 +1,8 @@
+<div>
+  <h1 id="article-title">{{article.title}}</h1>
+  <p id="article-author">{{findAuthor(article.author_id)}}</p>
+  <p id="article-content">{{article.content}}</p>
+</div>
+<input title="comment" type="text" id="new-comment-content-input"/>
+<button id="confirm-create-comment-button"
+        (click)="confirm()">Confirm Comment</button>
