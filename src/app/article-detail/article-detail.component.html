@@ -1,6 +1,6 @@
 <div>Article-detail</div>
-<div *ngIf="article.title">
-<button (click)="signOut()">sign out</button>
+
+<button id="signout-button" (click)="signOut()">sign out</button>
 
 <div>
   <h1 id="article-title">{{article.title}}</h1>
@@ -9,9 +9,11 @@
 </div>
 <div>
   <button id="edit-article-button"
-        routerLink="/articles/{{article.id}}/edit">edit Article</button>
-<button id="delete-article-button"
-        (click)="deleteArticle()">delete Article</button>
+          routerLink="/articles/{{article.id}}/edit"
+          *ngIf="article.author_id==currentUser.id">edit Article</button>
+  <button id="delete-article-button"
+          (click)="deleteArticle()"
+          *ngIf="article.author_id==currentUser.id">delete Article</button>
 </div>
 
 <div><br>Comments
@@ -35,4 +37,3 @@
 
 <button id="back-detail-article-button"
        (click)="goBack()">back</button>
-</div>

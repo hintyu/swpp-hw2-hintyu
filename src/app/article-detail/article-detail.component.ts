@@ -88,6 +88,7 @@ export class ArticleDetailComponent implements OnInit {
   createComment(): void {
     this.commentService.addComment(this.newComment)
       .then(()=> this.updateComments())
+    this.newComment.content = ''
   }
 
   editComment(comment: Comment): void {

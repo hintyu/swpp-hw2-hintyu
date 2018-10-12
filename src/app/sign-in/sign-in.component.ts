@@ -18,10 +18,8 @@ export class SignInComponent implements OnInit {
   ) {}
 
   ngOnInit() {
-    let currentUser = this.userService.getCurrentUser()
-    if(currentUser.signed_in = true){
-      currentUser.signed_in = false
-      this.userService.updateUser(currentUser)
+    if(this.userService.getCurrentUser().signed_in){
+      this.userService.signOut()
     }
   }
 

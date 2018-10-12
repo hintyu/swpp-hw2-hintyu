@@ -4,7 +4,6 @@ import { User } from './user';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 
 
-// httpHeaders란 무엇인가??
 const httpOptions = {
   headers: new HttpHeaders( { 'Content-Type': 'application/json'} )
 }
@@ -17,7 +16,7 @@ export class UserService {
   // currentUser will be used to check authentications, sign-in status.
   currentUser: User
   userList: User[]
-  readonly  dummyUser: User = new User(-1, "", "", "", false )
+  readonly  dummyUser: User = new User(-1, '', '', '', false )
 
   constructor(
     private http: HttpClient
@@ -58,7 +57,7 @@ export class UserService {
     if(this.currentUser) {
       this.currentUser.signed_in = false;
       this.updateUser(this.currentUser)
-      this.currentUser = this.dummyUser
+        .then(() => this.currentUser = this.dummyUser)
     }
   }
 
