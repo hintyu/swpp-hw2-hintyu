@@ -19,16 +19,10 @@ export class SignInComponent implements OnInit {
 
   ngOnInit() {
     let currentUser = this.userService.getCurrentUser()
-    if(currentUser){
+    if(currentUser.signed_in = true){
       currentUser.signed_in = false
       this.userService.updateUser(currentUser)
     }
-  }
-
-  test(){
-    let hello: string = "hi"
-    hello= this.userService.getCurrentUser().name
-    return hello
   }
 
   signIn() {
@@ -38,7 +32,7 @@ export class SignInComponent implements OnInit {
     // userService's signIn method tries to sign-in with given email, password.
     // if it fails, it returns false. otherwise, it UPDATES user status inside the userService & http
     if (this.signInService.signIn(email, password)){
-      this.router.navigate(['/article'])
+      this.router.navigate(['/articles'])
 
     } else alert('Email or password is wrong')
 

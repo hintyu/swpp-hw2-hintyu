@@ -17,12 +17,15 @@ export class UserService {
   // currentUser will be used to check authentications, sign-in status.
   currentUser: User
   userList: User[]
+  readonly  dummyUser: User = new User(-1, "", "", "", false )
 
   constructor(
     private http: HttpClient
   ) {
-    this.getServiceUserList() // initialize user list when service created
+    this.currentUser = this.dummyUser
+    this.getServiceUserList() // initialize user list when service create
   }
+
   private userUrl = '/api/user/'
 
   /** To update & maintain userList inside this service **/
@@ -45,8 +48,6 @@ export class UserService {
     for(let num in this.userList) {
       if(this.userList[num].id === user_id) {
         return this.userList[num].name
-        // TODO: Cannot read property 'name' of null
-        // Sign-in후 새로고침 하면 발생하는 현상
       }
     }
     // if failed to find appropriate user of the id:
@@ -57,7 +58,7 @@ export class UserService {
     if(this.currentUser) {
       this.currentUser.signed_in = false;
       this.updateUser(this.currentUser)
-      this.currentUser = null
+      this.currentUser = this.dummyUser
     }
   }
 

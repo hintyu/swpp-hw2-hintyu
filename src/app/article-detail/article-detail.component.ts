@@ -1,11 +1,13 @@
 import { Component, OnInit } from '@angular/core';
+import { FormsModule } from "@angular/forms";
 import { ActivatedRoute, Router} from "@angular/router";
-import { Location } from "@angular/common";
 
 import { User } from "../user";
-import { Article } from "../article";
 import { UserService } from "../user.service";
+import { Article } from "../article";
 import { ArticleService } from "../article.service";
+import { Comment } from "../comment";
+import { CommentService } from "../comment.service";
 
 @Component({
   selector: 'app-article-detail',
@@ -15,53 +17,87 @@ import { ArticleService } from "../article.service";
 export class ArticleDetailComponent implements OnInit {
 
   article: Article
-  private users: User[]
+  comments: Comment[]
+  currentUser: User
+  newComment: Comment
 
   constructor(
     private route: ActivatedRoute,
-    private articleService: ArticleService,
     private userService: UserService,
-    private location: Location,
+    private articleService: ArticleService,
+    private commentService: CommentService,
     private router: Router
-  ) { }
+  ) {
+    this.article = new Article()
+  }
 
   ngOnInit() {
     // Send back not signed in users
-    if (!this.userService.getCurrentUser()) {
-      this.router.navigate(['/sign_in'])
-    }
-    // Send back if no article exists
-    this.getArticle()
-    this.getUserList()
+    this.currentUser = this.userService.getCurrentUser()
+    if(!this.currentUser.signed_in)
+      this.gotoSignIn()
+    this.newComment = new Comment()
+    this.getArticleAndComments()
   }
 
-  getArticle(): void {
+  /** initial workout functions**/
+  signOut(): void {
+    this.userService.signOut()
+    this.gotoSignIn()
+  }
+
+  getArticleAndComments(): void {
     const id = +this.route.snapshot.paramMap.get('id')
     this.articleService.getArticle(id)
-      .then(article => this.article = article)
+      .then(article => this.article = article,
+            ()=> this.gotoSignIn())
+            // Send back if no article exists
+      // update information of this page from given article
+      .then(()=> {
+        this.updateComments()
+        this.newComment.article_id = this.article.id
+        this.newComment.author_id = this.currentUser.id
+      })
   }
 
   findAuthor(author_id: number): string {
-    for(let num in this.users) {
-      if(this.users[num].id === author_id) {
-        return this.users[num].name
-        // TODO: Cannot read property 'name' of null
-        // Sign-in후 새로고침 하면 발생하는 현상
-      }
-    }
-    return '#NaN'
+    return this.userService.findAuthor(author_id)
+  }
+
+  gotoSignIn():void {
+    this.router.navigate(['../../sign_in', {relativeTo: this.route}])
   }
 
   goBack(): void {
-    this.location.back()
+    this.router.navigate(['../', {relativeTo: this.route}])
   }
 
-  getUserList(): void {
-    this.userService.getUserList()
-      .then(users => this.users = users)
+  /** Article methods **/
+  deleteArticle(): void{
+    this.articleService.deleteArticle(this.article.id)
+      .then(()=>
+      this.router.navigate(['../', {relativeTo: this.route}]))
   }
 
-  confirm(): void {
-
+  /** Comments methods **/
+  updateComments(): void{
+    this.commentService.getCommentListbyId(this.article.id)
+      .then(commentList => this.comments = commentList)
   }
+
+  createComment(): void {
+    this.commentService.addComment(this.newComment)
+      .then(()=> this.updateComments())
+  }
+
+  editComment(comment: Comment): void {
+    comment.content = prompt('Edit comment', comment.content)
+    this.commentService.updateComment(comment)
+  }
+
+  deleteComment(comment: Comment): void {
+    this.commentService.deleteComment(comment)
+      .then(() => this.updateComments())
+  }
+
 }

@@ -1,8 +1,6 @@
 import { Injectable } from '@angular/core';
-
 import { Comment } from './comment';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
-
 
 // httpHeaders란 무엇인가??
 const httpOptions = {
@@ -20,8 +18,25 @@ export class CommentService {
     private http: HttpClient
   ) { }
 
+  /** For ArticleDetailComponent **/
+
+  getCommentListbyId(article_id: number): Promise<Comment[]> {
+    let commentsId:Comment[] = []
+
+    this.getCommentList()
+      .then(commentList => {
+        for(let comment of commentList){
+          if(comment.article_id === article_id)
+            commentsId.push(comment)
+        }
+      })
+    return new Promise<Comment[]>((resolve) => {
+      resolve(commentsId)
+    })
+  }
+
   /** GET functions **/
-  getCommenteList(): Promise<Comment[]> {
+  getCommentList(): Promise<Comment[]> {
     return this.http.get<Comment[]>(this.commentUrl)
       .toPromise()
       .catch(this.handleError('getCommentList', []))
@@ -53,7 +68,7 @@ export class CommentService {
   /** DELETE functions **/
   deleteComment(comment: Comment | number): Promise<Comment> {
     const id = (typeof comment === 'number') ? comment : comment.id
-    const url = '${this.commentUrl}/${id}'
+    const url = `${this.commentUrl}/${id}`
     return this.http.delete<Comment>(url, httpOptions)
       .toPromise()
       .catch(this.handleError<Comment>('deleteComment)'))

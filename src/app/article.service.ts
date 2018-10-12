@@ -21,10 +21,6 @@ export class ArticleService {
   ) { }
 
 
-
-  /** Components Helping functions **/
-
-
   /** GET functions **/
   getArticleList(): Promise<Article[]> {
     return this.http.get<Article[]>(this.articleUrl)
@@ -58,7 +54,7 @@ export class ArticleService {
   /** DELETE functions **/
   deleteArticle(article: Article | number): Promise<Article> {
     const id = (typeof article === 'number') ? article : article.id
-    const url = '${this.articleUrl}/${id}'
+    const url = `${this.articleUrl}/${id}`
     return this.http.delete<Article>(url, httpOptions)
       .toPromise()
       .catch(this.handleError<Article>('deleteArticle)'))
@@ -68,7 +64,7 @@ export class ArticleService {
   private handleError<T> (operation = 'operation', result?: T) {
     return (error: any): Promise<T> => {
       console.error(error);
-      return Promise.resolve(result as T);
+      return Promise.reject(result as T);
     };
   }
 

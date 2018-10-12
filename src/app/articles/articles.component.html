@@ -1,11 +1,10 @@
-<div>Articles!
-</div>
+<div>Articles!</div>
 <button (click)="signOut()">sign out</button>
 <div>
   <ul>
     <li *ngFor="let article of articles">
       <span>{{article.id}}&nbsp;&nbsp;</span>
-      <button routerLink="/article/{{article.id}}">
+      <button routerLink="/articles/{{article.id}}">
         {{article.title}}
       </button>
       <span>&nbsp;&nbsp;{{findAuthor(article.author_id)}}</span>
@@ -13,5 +12,5 @@
   </ul>
 </div>
 <button id="create-article-button"
-        routerLink="/article/create">Create
+        routerLink="/articles/create">Create
 </button>

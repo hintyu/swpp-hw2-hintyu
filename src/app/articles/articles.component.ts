@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { Router } from "@angular/router";
+import { Router, ActivatedRoute } from "@angular/router";
 
 import { ArticleService } from "../article.service";
 import { UserService } from "../user.service";
@@ -19,14 +19,15 @@ export class ArticlesComponent implements OnInit {
   constructor(
     private articleService: ArticleService,
     private userService: UserService,
-    private router: Router
+    private router: Router,
+    private route: ActivatedRoute
   ) { }
 
   ngOnInit() {
     // Send back not signed in users
-    if (!this.userService.getCurrentUser()) {
-      this.router.navigate(['/sign_in'])
-    }
+    if (!this.userService.getCurrentUser().signed_in)
+      this.gotoSignIn()
+
     this.getArticleList()
   }
 
@@ -37,11 +38,10 @@ export class ArticlesComponent implements OnInit {
 
   signOut(): void {
     this.userService.signOut()
-    this.router.navigate(['/sign_in'])
+    this.gotoSignIn()
   }
 
   findAuthor(author_id: number): string {
-    // findAuthor returns #NaN if no user found
     return this.userService.findAuthor(author_id)
   }
 
@@ -49,4 +49,7 @@ export class ArticlesComponent implements OnInit {
     this.router.navigate(['/create'])
   }
 
+  gotoSignIn(): void{
+    this.router.navigate(['../sign_in', {relativeTo: this.route}])
+  }
 }
