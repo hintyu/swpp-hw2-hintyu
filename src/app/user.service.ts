@@ -93,5 +93,4 @@ export class UserService {
       return Promise.resolve(result as T);
     };
   }
-
 }

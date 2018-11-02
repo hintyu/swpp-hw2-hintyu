@@ -1,6 +1,8 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
-
+import { FormsModule } from '@angular/forms';
+import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { ArticleEditComponent } from './article-edit.component';
+
 
 describe('ArticleEditComponent', () => {
   let component: ArticleEditComponent;
@@ -8,7 +10,11 @@ describe('ArticleEditComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ ArticleEditComponent ]
+      declarations: [ ArticleEditComponent ],
+      imports: [
+        FormsModule,
+        NgbModule,
+      ]
     })
     .compileComponents();
   }));
